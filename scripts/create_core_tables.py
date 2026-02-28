@@ -1,0 +1,33 @@
+from pathlib import Path
+from sqlalchemy import text
+from src.db.engine import get_engine
+
+
+def _read_sql(path: Path) -> str:
+    if not path.exists():
+        raise FileNotFoundError(f"Could not find schema file at: {path}")
+    return path.read_text(encoding="utf-8")
+
+
+def main() -> None:
+
+    engine = get_engine()
+
+    spine_path = Path("src/db/schema/create_spine_table.sql")
+    core_path = Path("src/db/schema/games_boxscores_tables.sql")
+    lineups_path = Path("src/db/schema/lineup_game_logs.sql")
+
+    spine_ddl = _read_sql(spine_path)
+    core_ddl = _read_sql(core_path)
+    lineups_ddl = _read_sql(lineups_path)
+
+
+    with engine.begin() as conn:
+        conn.execute(text(spine_ddl)) 
+        conn.execute(text(core_ddl))   
+        conn.execute(text(lineups_ddl))
+    print("tables created (spine, core and lineups)")
+
+
+if __name__ == "__main__":
+    main()
