@@ -20,4 +20,4 @@ An interactive Tableau dashboard to track team and player performance can be fou
 
 # Database Schema
 
-![NBA ERD](docs//GitHub/Timberwolves-MidSeason-Review/data/erd.png)
+![NBA ERD](documents//GitHub/Timberwolves-MidSeason-Review/data/erd.png)
