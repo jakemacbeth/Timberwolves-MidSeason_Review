@@ -19,39 +19,57 @@ src/db/schema holds sql files for table creation ran with the create_core_tables
 
 src/etl holds etl files used to extract data from the api and load into PGAdmin which are ran in the weekly_run script as well as an error handling script that sends errors to the PGAdmin database.
 
+Screen shots of the interactive Power BI dashboard used to track key player and team performance metrics.
 
- 
-![Dashboard Preview](reports/Screenshot_of_player_dashboard.png)
-
+<div align="center">
+  <img src="reports/Screenshot_of_team_dashboard.png" width="48%" />
+  <img src="reports/Screenshot_of_player_dashboard.png" width="48%" />
+</div>
 
 # Database Schema
 
+
 ![NBA ERD](data/erd.png)
+
 
 # Executive Summary
 
 
 # Team Performance
 
-![Dashboard Preview](reports/Screenshot_of_team_dashboard.png)
+<div align="center">
+  <img src="reports/offense_defense_rating.png" width="75%" height="auto" />
+</div>
+
+  Excluding the January 25th game against the Warriors, the team’s offensive rating has been moderately stable, staying between 100 and 125. The excluded game looks to be a fluke night because all starters played full minutes and in the following game, they played the same Warriors team as part of a back-to-back improving their offensive rating to 101 from 82. Defensive ratings have been much more volatile with four peaks near 140 and multiple lows under 85. Considering the limited sample size, figure 3 below suggests confirmation of these claims. As expected, when playing average defenses, the Timberwolves score slightly more than when playing the league’s best defenses. When facing the top eight offenses the results split sharply. Against the league’s best teams that are top eight in both offense and defense they allow an average of 112.1 points but against elite offenses with weaker defenses they allow 16.6 more points per game. This inconsistency and the multitude of high defensive rating peaks suggest the team has the capability to be an elite defensive unit but not yet the consistency and warrants further exploration into how they got exposed and under what conditions they defend well in.
 
 
-Excluding the January 25th game against the Warriors, the team’s offensive rating has been moderately stable, staying between 100 and 125. The excluded game looks to be a fluke night because all starters played full minutes and in the following game, they played the same Warriors team as part of a back-to-back improving their offensive rating to 101 from 82. Defensive ratings have been much more volatile with four peaks near 140 and multiple lows under 85. Considering the limited sample size, figure 3 below suggests confirmation of these claims. As expected, when playing average defenses, the Timberwolves score slightly more than when playing the league’s best defenses. When facing the top eight offenses the results split sharply. Against the league’s best teams that are top eight in both offense and defense they allow an average of 112.1 points but against elite offenses with weaker defenses they allow 16.6 more points per game. This inconsistency and the multitude of high defensive rating peaks suggest the team has the capability to be an elite defensive unit but not yet the consistency and warrants further exploration into how they got exposed and under what conditions they defend well in.
+<div align="center">
+  <img src="reports/team_bucket_table.png" width="75%" />
+</div>
 
-![Team Strength Buckets Table](reports/team__bucket_table.png)
 
-The lower pannels of the dashboard indicates the teams possession creation metrics are nearly the same as the teams they play. There are no significant descreptencies in the number of offensive or defensive rebounds compared to opponents and the turnover margin seems to flip around 50%. As of now this is not an glaring issue because the offense is performing at a very high level. Since they do not dominate in total possessions and have a very volatile defense, there is a smaller margin for error making consistency required on the offensive side of the game.
+  The lower pannels of the dashboard indicates the teams possession creation metrics are nearly the same as the teams they play. There are no significant descreptencies in the number of offensive or defensive rebounds compared to opponents and the turnover margin seems to flip around 50%. As of now this is not an glaring issue because the offense is performing at a very high level. Since they do not dominate in total possessions and have a very volatile defense, there is a smaller margin for error making consistency required on the offensive side of the game.
 
 # Player Performance 
 
 ## Most Significant Contributers
 
-The team succeeds in many ways with different players making notable contributions. Despite the variety in player impact the typical starting five of DiVincenzo, Gobert, Randle, McDaniels and Edwards are the clearly most efficient, impactful players. Each player dominates in their own way with minimal overlap providing significant evidence the starting lineup has been consistently chosen correctly. 
-Anthony Edwards leads this category with his combination of scoring and disciplined defense. He leads the team in scoring averaging seven more points a game than anyone else on the team. While shooting five more shots a game than anyone else he shows strong efficiency being sixth in field goal percentage and third in 3-pt percentage. He’s the most impactful defender on the team averaging the second most steals and the most blocks of any guard while recording the lowest number of fouls for the starting five.
+  The team succeeds in multiple ways with many players making notable contributions. Despite the variety in player impact the typical starting five of DiVincenzo, Gobert, Randle, McDaniels and Edwards are the clearly most efficient, impactful players. Each player dominates in their own way with minimal overlap providing significant evidence the starting lineup has been consistently chosen correctly. 
+
+  Anthony Edwards leads this category with his combination of scoring and disciplined defense. He leads the team in scoring averaging seven more points a game than anyone else on the team. While shooting five more shots a game than anyone else he shows strong efficiency being sixth in field goal percentage and third in 3-pt percentage. He’s the most impactful defender on the team averaging the second most steals and the most blocks of any guard while recording the lowest number of fouls for the starting five.
+
 
 <div align="center">
   <img src="reports/top_scorers.png" width="48%" />
   <img src="reports/steals_blocks_fouls.png" width="48%" />
 </div>
 
+
+  Donte DiVincenzo is the team’s most reliable player, recording the highest plus minus of 5.2. Meaning that when he is on the court the Timberwolves score 5.2 more points on average than when he is off the court. This is a result of his ball security skills. He is the team’s primary ball handler being the team’s point guard and as expected he averages 4.2 assists per game, second only to Julius Randle at 5.4. Despite the considerable gap in total assists, he records 2.8 assists for every one turnover while Julius Randle is at about 2 assists per turnover. To add onto that efficiency Donte creates as many possessions as he loses. He averages as many steals as he does turnovers meaning giving the Timberwolves a good chance to be net positive on points when he is on the court.
+
+
+
+
+  While still positively impactful Rudy Gobert, Julius Randle and Jaden McDaniel’s earn their starting spots but they each have their own drawbacks. Rudy has been shooting more efficiently an any other player on the team and although the box score statatics strugle to show it he serves as one of the leagues best rim protectors but he has taken zero three pointers and takes the least shots out of any player that averages more than 12 minutes a game. Julius Randle as mentioned previously has the most assists but also the most turnovers and is second in fouls commited only to Jaden McDaniel's. Jaden 
 
