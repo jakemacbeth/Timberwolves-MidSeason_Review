@@ -19,8 +19,11 @@ src/db/schema holds sql files for table creation ran with the create_core_tables
 
 src/etl holds etl files used to extract data from the api and load into PGAdmin which are ran in the weekly_run script as well as an error handling script that sends errors to the PGAdmin database.
 
-An interactive Tableau dashboard to track team and player performance can be found here [link].
+An interactive Power BI Dashboard to track player and team key metrics thorughout season.
+
+![Dashboard Preview](reports/Screenshot_of_team_dashboard.png)
  
+![Dashboard Preview](reports/Screenshot_of_player_dashboard.png)
 
 # Database Schema
 
