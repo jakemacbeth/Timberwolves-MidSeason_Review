@@ -41,7 +41,7 @@ Screen shots of the interactive Power BI dashboard used to track key player and 
   <img src="reports/offense_defense_rating.png" width="75%" height="auto" />
 </div>
 
-  Excluding the January 25th game against the Warriors, the team’s offensive rating has been moderately stable, staying between 100 and 125. The excluded game looks to be a fluke night because all starters played full minutes and in the following game, they played the same Warriors team as part of a back-to-back improving their offensive rating to 101 from 82. Defensive ratings have been much more volatile with four peaks near 140 and multiple lows under 85. Considering the limited sample size, the figure below suggests confirmation of these claims. As expected, when playing average defenses, the Timberwolves score slightly more than when playing the league’s best defenses. When facing the top eight offenses the results split sharply. Against the league’s best teams that are top eight in both offense and defense they allow an average of 112.1 points but against elite offenses with weaker defenses they allow 16.6 more points per game. This inconsistency and the multitude of high defensive rating peaks suggest the team has the capability to be an elite defensive unit but not yet the consistency and warrants further exploration into how they got exposed and under what conditions they defend well in.
+  Excluding the January 25th game against the Warriors, the team’s offensive rating has been moderately stable, staying between 100 and 125 with an average distance from the mean of 10.8 points compare to a league average of 11.4. The excluded game looks to be a fluke night because all starters played full minutes and in the following game, they played the same Warriors team as part of a back-to-back improving their offensive rating to 101 from 82. Defensive ratings have been much more volatile with four peaks near 140, multiple lows under 85 and an average distance from the mean of 12.8 compared to the league average of 11.4. Considering the limited sample size, the figure below suggests confirmation of these claims. As expected, when playing average defenses, the Timberwolves score slightly more than when playing the league’s best defenses. When facing the top eight offenses the results split sharply. Against the league’s best teams that are top eight in both offense and defense they allow an average of 112.1 points but against elite offenses with weaker defenses they allow 16.6 more points per game. This inconsistency and the multitude of high defensive rating peaks suggest the team has the capability to be an elite defensive unit but not yet the consistency and warrants further exploration into how they got exposed and under what conditions they defend well in.
 
 
 <div align="center">
@@ -98,15 +98,38 @@ Although Rudy Gobert, Julius Randle, and Jaden McDaniels remain positively impac
     <img src="reports/naz_shootingpct.png" width="48%" /> 
   </div>
 
+  #### Terrance Shannon Jr.: low-usage perimeter specialist with evidence for increased playing time
+
+- Operates as a third-string substitute for McDaniels, averaging 11 minutes per game versus a team average of 17, suggesting potential for increased playing time
+- Shoots efficiently from three point range, within 5 percentage points of the team’s top performer McDaniels
+- Records low turnover (.6), assist (.6), steals(.3) and foul (1.5) rates — all materially below team averages indicating limited impact outside of shooting
+- Negative plus minus differential is likely influenced by low lineup quality and garbage time minutes
+- Contribution profile is narrowly concentrated in shooting efficiency, but his low-error production suggests scalability without introducing significant volatility
+
+  <div align="center">
+    <img src="reports/terrance_output.png" width="75%" /> 
+  </div> 
+
 #### Mike Conley: low-risk facilitator with limited scoring and defensive impact
 
 - Functions as the primary substitute for DiVincenzo and provides strong ball retention, recording the lowest turnover rate (.6 per game) among players with significant minutes
 - Ranks top five in assists, reinforcing his role as a stabilizing distributor
-- However, he is the least efficient shooter on the roster and rates below team average across defensive indicators
+- However, he is the least efficient shooter on the roster while also shooting the least and rates below team average across defensive indicators
 - Capable of maintaining operational stability, but extended usage may reduce overall efficiency due to limited scoring output and defensive contribution
+  
+  <div align="center">
+    <img src="reports/competing_guards.png" width="48%" /> 
+    <img src="reports/conely_donte_shooting.png" width="48%" /> 
+  </div>
 
   #### Bones Hyland: statistically neutral reserve presence
 
 - Serves as the substitute for Anthony Edwards without exhibiting strong separation in any single performance category
 - Metrics cluster near team averages across efficiency, turnover rate, assist generation, and defensive indicators
 - Does not materially elevate or depress overall performance, functioning primarily as a neutral replacement option
+
+   <div align="center">
+    <img src="reports/bones_output.png" width="75%" /> 
+  </div> 
+
+
