@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Any, Optional, List, Dict
+from typing import Optional, List, Dict
 
 from sqlalchemy import text
 from sqlalchemy.engine import Engine

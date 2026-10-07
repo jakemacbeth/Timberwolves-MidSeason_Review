@@ -11,8 +11,6 @@ Orchestrates the full ETL pipeline:
 """
 import sys
 from datetime import datetime
-from pathlib import Path
-
 from config import get_config
 from src.db.engine import get_engine
 from src.etl.spine import load_seasons
@@ -23,7 +21,7 @@ from src.utils.logger import setup_logger, get_default_log_file
 from src.etl.load_gamebygame_lineups import load_season_game_lineups_for_team
 
 
-log_file = get_default_log_file("daily_run")
+log_file = get_default_log_file("weekly_run")
 logger = setup_logger(__name__, log_file=log_file)
 
 
