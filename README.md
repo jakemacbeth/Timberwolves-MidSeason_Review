@@ -130,9 +130,9 @@ Every difference in offensive and defensive rating comes down to four factors: s
 
 <table>
 <tr>
-<td width="33%"><img src="reports/chart_one.png" width="100%" /></td>
-<td width="33%"><img src="reports/chart_two.png" width="100%" /></td>
-<td width="33%"><img src="reports/chart_three.png" width="100%" /></td>
+<td width="33%"><img src="reports/5game_shooting.png" width="100%" /></td>
+<td width="33%"><img src="reports/5game_turnovers.png" width="100%" /></td>
+<td width="33%"><img src="reports/5game_oreb.png" width="100%" /></td>
 </tr>
 </table>
 
