@@ -4,7 +4,7 @@ Contents
 - Executive Summary
 - Team Performance 
 - Player Utilization
-- Conclusion and Next Steps
+- Recommendations and Next Steps
 - Monitoring Dashboards and Database Schema
 - Repository Structure
 
@@ -85,8 +85,8 @@ Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwol
 
 3. **Key Contributors**
    - All five starters rank in the team's top five in average plus-minus, each filling a distinct role.
-   - Anthony Edwards: leads the team at 29.2 points per game while committing the fewest fouls of any perimeter starter (1.8).
-   - Donte DiVincenzo: pairs game averages of 4.1 assists with 1.5 turnovers and a team high +5.2 plus-minus.
+   - Anthony Edwards: leading scorer at 29.2 points per game while committing the fewest fouls of any perimeter starter (1.8).
+   - Donte DiVincenzo: leads the team in both assist to turnover ratio (2.7) and plus-minus (+5.2)
 4. **Underutilized Players** 
    - Terrance Shannon Jr.: second highest 3-point percentage playing the fifth least minutes. 
    - Mike Conely: least amount of turnovers and second in assists but is the least efficient shooter on the team
@@ -130,28 +130,92 @@ Every difference in offensive and defensive rating comes down to four factors: s
 
 <table>
 <tr>
-<td width="33%"><img src="reports/5game_shooting.png" width="100%" /></td>
-<td width="33%"><img src="reports/5game_turnovers.png" width="100%" /></td>
-<td width="33%"><img src="reports/5game_oreb.png" width="100%" /></td>
+<th width="50%">Shooting and Free Throws</th>
+<th width="50%">Rebounding and Turnovers</th>
+</tr>
+<tr>
+<td align="center"><img src="reports/off_efg.png" height="180" /></td>
+<td align="center"><img src="reports/off_orb_pct.png" height="180" /></td>
+</tr>
+<tr>
+<td align="center"><img src="reports/off_ft_rate.png" height="180" /></td>
+<td align="center"><img src="reports/off_tov_pct.png" height="180" /></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><img src="reports/four_factors_legend.png" width="50%" /></td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+1. **Shooting Efficiency (eFG%):** the largest driver of offensive rating
+   - Jaden McDaniels, Terrance Shannon Jr. and Anthony Edwards lead the team
+   - The season-low 49.3% stretch came from McDaniels, Julius Randle and Edwards shooting 23%, 11% and 7.5% below their season averages. All three returned to their usual levels the next stretch. 
+2. **Free Throw Rate:** neutral impact on offensive rating
+   - Trends with league average apart from two positive outlier stretches
+   - 26.8 makes per attempt outlier stretch was led by Julius Randle (39/43) and Anthony Edwards (25/29)
+   - 33.3 makes per attempt outlier stretch covers only the final two games. Given the season to date trend it is unlikely to hold throughout the stretch.
+
+</td>
+<td width="50%" valign="top">
+
+3. **Offensive Rebounding (ORB%):** no meaningful impact on offensive rating
+   - No single player drove the highs or lows the deviations were team wide.
+   - Every stretch is within 2.3 points of the season average.
+   - Stretches are equally split above and below league average.
+5. **Turnovers (TOV%)** no significant impact on offensive rating
+   - Trends with the league average apart from the 16% turnover rate stretch.
+   - Outlier stretch was team wide but had significant contributions from DiVincenzo, Reid, Hyland, and McDaniels who each committed 3-5 more than usual.
+   - Without that stretch, Minnesota's TOV% is 11.7, slightly better than the league, and it dropped back to 11.0 in the very next stretch.
+
+</td>
 </tr>
 </table>
 
+<div align="center">
   
-#### Shooting Efficiency 
-
-#### Turnovers
-
-#### Rebounding
-
-#### Free Throws
-
 ## Defense
+</div>
 
-#### Shooting Efficiency and Free Throw Rate
+<table>
+<tr>
+<th width="33%">Shooting</th>
+<th width="33%">Turnovers</th>
+<th width="33%">Rebounding</th>
+</tr>
+<tr>
+<td><img src="reports/def_shooting.png" width="100%" /></td>
+<td><img src="reports/def_tov_pct.png" width="100%" /></td>
+<td><img src="reports/def_orb_pct.png" width="100%" /></td>
+</tr>
+<tr>
+<td colspan="3" align="center"><img src="reports/four_factors_legend.png" width="50%" /></td>
+</tr>
+<tr>
+<td valign="top">
 
-#### Turnovers
+1. **Opponent Shooting:** inefficiently disrupts target areas
+   - The agressive perimeter pressure moves shots where it wants them. Opponents take about 2 fewer threes and 2.6 more twos per game than usual. Gobert then reduces their 2-point percentage by 3.5%.
+   -  Results in zero effect on 3-point scoring. Opponents make threes at their normal rate of 35.8% vs 35.9% against Minnesota.
+   - Perimeter pressure creates more interior space putting Gobert and other interior defenders in difficult spots where they need to foul increasing foul trouble and easy points.
+</td>
+<td valign="top">
 
-#### Rebounding
+2. **Forced Turnovers** 
+   - Trends with the league. Opponents turn it over on 12.5% of possessions against the Wolves, compared with a league average of 12.2% (12th). All but two stretches are within about 1 point of the league.
+   - The most recent stetch of 19.8% is only 2 games and will likely come back down. A 2-game sample can swing a lot, and no other stretch is above 13.6, so expect this number to drop toward the normal range.
+   - Minnesota has forced more turnovers than the league in each of the last 6 full stretches. Although the margins were small the consistency is a steady edge to rely on.
+
+</td>
+<td valign="top">
+
+3. **Defensive Rebounding**
+   - The 36.0 stretch is only 2 games and will likely come back down. It's the highest in the chart by almost 5 points, and a 2-game sample swings easily. 
+   - 9/11 other stretches are within 2 points of league average with the 2 significant deviations splitting above and below.
+   - The margins are small, but they're consistently on the right side. The Wolves held opponents below the league average in 10 of 11 full stretches, and for the season they allow 25.2% compared with a league average of 26.1% (7th best).
+
+</td>
+</tr>
+</table>
 
 
 <div align="center">
@@ -254,7 +318,7 @@ Every difference in offensive and defensive rating comes down to four factors: s
   </div>
 <br><br>
 
-# Conclusion and Next Steps
+# Recommendations and Next Steps
 ---
 **Team and Player Monitoring Dashboards**
 <div align="center">
