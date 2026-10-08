@@ -114,6 +114,13 @@ Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwol
 # Team Performance
 </div>
 
+<br><br>
+  <div align="center"> 
+    <img src="reports/5game_offense_rating.png" width="48%" /> 
+    <img src="reports/5game_defense_rating.png" width="48%" /> 
+  </div>
+<br><br>
+
 Every difference in offensive and defensive rating comes down to four factors: shooting efficiency, turnovers, rebounding and free throw rate. Introduced by Dean Oliver and now standard across NBA analytics, these factors are measured per possession, so game speed doesn't distort them. Grading Minnesota and its opponents on each factor against the league average shows exactly which part of the game drives each rating.
 
 <div align="center">
@@ -121,17 +128,22 @@ Every difference in offensive and defensive rating comes down to four factors: s
 ## Offense
 </div>
 
-<br><br>
-<div align="center">
-  <img src="reports/5game_offense_rating.png" width="75%" height="auto" />
-</div>
+<table>
+<tr>
+<td width="33%"><img src="reports/chart_one.png" width="100%" /></td>
+<td width="33%"><img src="reports/chart_two.png" width="100%" /></td>
+<td width="33%"><img src="reports/chart_three.png" width="100%" /></td>
+</tr>
+</table>
 
   
-#### Shooting Efficiency and Free Throw Rate
+#### Shooting Efficiency 
 
 #### Turnovers
 
 #### Rebounding
+
+#### Free Throws
 
 ## Defense
 
