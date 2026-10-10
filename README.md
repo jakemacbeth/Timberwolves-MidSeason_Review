@@ -16,9 +16,9 @@ Contents:
 
 There are two routes to the NBA playoffs. The top six teams in each conference earn immediate spots while the 7th-10th place teams play against each other to determine the last two spots. Currently at sixth in the Western Conference, the Timberwolves hold the last automatic spot, 9 wins behind first place, 2 wins ahead of 7th and 14 ahead of 11th.
 
-Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwolves' performance through the first 57 games of the 2025–26 season. The review identifies what drives the team's results and which adjustments would have the most impact on securing a top-six seed. The key insights and recommendations focus on the following areas:
+Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwolves' performance through the first 57 games of the 2025–26 season. The review identifies what drives the team's results and which adjustments would have the most impact on securing a top-six seed.
 
-**Northstar metrics:** 
+**Northstar Metrics:** 
 -   Team Offense Rating: points generated per 100 possessions
 -   Team Defense Rating: points allowed per 100 possessions
 
@@ -68,13 +68,11 @@ Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwol
 <td width="50%" valign="top">
 
 1. **Northstar Drivers**
-   - Offense: 9/11 full five game stretches shooting efficiency was above league average accounting for 1.9 of the 2.3 offensive rating advantage the Timberwolves have.
+   - Offense: In 9 of 11 full five game stretches shooting efficiency was above league average accounting for 1.9 of the 2.3 offensive rating advantage the Timberwolves have.
    - Defense: In only 6 of 11 full five game stretches did Minnesota hold opponents' shooting efficiency below the league average, but it still accounts for 1.3 of the Timberwolves' 1.8 point defensive rating advantage.
-
-3. **Defensive Scheme Improvement**
+2. **Defensive Scheme Improvement**
    - The current aggressive perimeter pressure limits 3-point attempts and makes by ~5.5% each but allows 5% more 2-point attempts and 6% more freethrows
-   - Free throws are the only factor working against the defense. Opponent's free throw rate against Minnesota is 21.5, above the league's 20.8, which costs 17% of the defense's overall 1.8-point edge.
-
+   - Free throws are the only factor working against the defense. Opponent's free throw rate against Minnesota is 21.5, above the league's 20.8, which costs 17% of the defensive ratings 1.8-point edge.
 </td>
 <td width="50%" valign="top">
 
@@ -221,7 +219,7 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
   
 ## Most Significant Contributers
 
-  The team succeeds in multiple ways with many players making notable contributions. Despite the variety in player impact the typical starting five of DiVincenzo, Gobert, Randle, McDaniels and Edwards are the clearly most efficient, impactful players. Each player dominates in their own way with minimal overlap providing significant evidence the starting lineup has been consistently chosen correctly. 
+  The team succeeds in multiple ways with many players making notable contributions. Despite the variety in player impact the typical starting five of DiVincenzo, Gobert, Randle, McDaniels and Edwards are the most efficient, impactful players. Each player dominates in their own way with minimal overlap providing significant evidence the starting lineup has been consistently chosen correctly. 
 
  #### Most impactful player: Anthony Edwards 
  - Leads the team in scoring averaging seven more points a game than anyone else.
@@ -313,8 +311,51 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
   </div>
 <br><br>
 
+<div align="center">
+  
 # Recommendations
----
+
+</div>
+
+### Team Performance
+- **Protect shooting efficiency by steering shots to the most efficient shooters**
+    - Change Divencenzo's role to the primary facilitator from a primary scorer letting McDaniels, Shannon Jr., and Edwards pick up the extra scoring resposibility.
+        - McDaniels, Shannon Jr., and Edwards lead the team in eFG%
+        -  DiVincenzo is a primary scoring option but below average in efficiency and leads team in assist to turnover ratio.
+    - Limit Julius Randle's and Ayo Dosunmu's 3-point attempts
+        - Both players are two of the most efficient 2-point shooters while among the worst in efficient 3-point efficiency and the highest in 3-point attempts
+- **Test a new defenesive scheme**
+    - Shift from aggressive perimeter pressure to a containment scheme that keeps Gobert near the basket and funnels drives toward him.
+        - Perimeter pressure does not reduce 3-point efficiency. It cuts opponents' 3-point attempts and makes by ~5.5% each, but they still shoot their normal 3-point percentage (35.9% against Minnesota vs. 35.8% normally).
+        - Gobert lowers opponents' 2-point percentage by 3.5%, so the scheme should send more shots his way rather than force him to rotate out of position.
+    - Have perimeter defenders contain the ball instead of overplaying and gambling, reducing the fouls that give opponents easy points.
+        - Free throws are the only factor working against the defense: opponents' free throw rate is 21.5 vs. the league's 20.8, costing 17% of the 1.8-point defensive edge.
+        - The current scheme allows 6% more free throws and creates interior space where Gobert and other interior defenders are forced to foul.
+    - Test the scheme over one five-game stretch and compare its four factors to the current scheme before adopting it fully.
+        - Minnesota has forced more turnovers than the league in each of the last 6 full stretches (12.5% vs. 12.2%), and less perimeter pressure could reduce that edge.
+        - Keeping bigs near the rim should protect the team's defensive rebounding, which is 7th best in the league (25.2% vs. 26.1%).
+        - Reducing perimeter pressure could increase both attempts and quality nullifying the reduction in fouls and 2-point efficiency.
+
+### Player Utilization
+
+- **Keep the starting five intact**
+    - Continue starting DiVincenzo, Gobert, Randle, McDaniels and Edwards, and prioritize their shared minutes in close games.
+        - All five starters rank in the team's top five in average plus-minus.
+        - Each fills a distinct role with minimal overlap: Edwards leads in scoring (29.2 points per game, seven more than anyone else), Randle in assists (5.3), DiVincenzo in assist-to-turnover ratio and plus-minus (+5.2), Gobert in blocks (1.5) and shooting efficiency, and McDaniels in 3-point percentage.
+- **Expand Terrance Shannon Jr.'s minutes in place of Bones Hyland**
+    - Make Shannon Jr. the first perimeter substitute for Edwards and McDaniels, taking over minutes currently going to Hyland.
+        - Shannon Jr. is a scoring specialist who shoots 41% from three, second only to McDaniels, and rarely turns the ball over (0.6 per game) but also produces few assists (0.6).
+        - Hyland is an all-around player whose metrics cluster near team averages in every category without standing out in any one, so replacing his minutes risks little while adding a proven shooter.
+- **Pair Conley and Shannon Jr. with Gobert to maintain leads while starters rest**
+    - Use a bench unit built around Conley's ball security, Shannon Jr.'s shooting and Gobert's rim protection when Minnesota is ahead.
+        - Conley records the lowest turnover rate among players with significant minutes (0.6 per game) and ranks top five in assists, which helps protect leads by limiting empty possessions.
+        - Shannon Jr.'s shooting offsets Conley's scoring limitations, since Conley is the least efficient shooter on the roster.
+        - Both players rate below team average defensively, so Gobert's presence covers for their limitations at the rim.
+- **Use Naz Reid in offense first lineups**
+    - Play Reid at center when Minnesota needs scoring, particularly when trailing, and keep Gobert led lineups for protecting leads or starting games.
+        - Reid is a stronger perimeter shooter than either Gobert or Randle, which spreads the floor in a way Gobert can't, since Gobert hasn't attempted a three this season.
+        - Reid commits roughly half as many turnovers as Randle, so he adds spacing without adding ball-security risk.
+
 **Team and Player Monitoring Dashboards**
 <div align="center">
   <img src="reports/Screenshot_of_team_dashboard.png" width="48%" />
