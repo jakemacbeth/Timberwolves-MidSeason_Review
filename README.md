@@ -211,7 +211,7 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 <br><br>
   <div align="center"> 
     <img src="reports/average_plus_minus.png" width="48%" /> 
-    <img src="reports/assists_steals_turnovers.png" width="48%" /> 
+    <img src="reports/assist_steals_turnovers.png" width="48%" /> 
   </div>
 
 #### Most reliable player: Donte DiVincenzo
