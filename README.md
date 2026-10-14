@@ -6,7 +6,6 @@ Contents:
 - Player Utilization
 - Recommendations
 - Monitoring Dashboards and Database Schema
-- Repository Structure
 
 <div align="center">
   
@@ -29,34 +28,11 @@ Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwol
 </div>
 <br><br>
 <div align="center">
-  <img src="reports/offense_defense_rating.png" width="75%" height="auto" />
+  <img src="reports/defense_offense_rating.png" width = "98%" height="auto" align="middle" />
 </div>
 
 <div align="center">
-
-<table>
-<tr>
-<th></th>
-<th colspan="2">Offensive Rating</th>
-<th colspan="2">Defensive Rating</th>
-</tr>
-<tr>
-<th></th>
-<th>Avg</th><th>SD</th>
-<th>Avg</th><th>SD</th>
-</tr>
-<tr>
-<td><b>Timberwolves</b></td>
-<td>116.7</td><td>10.8</td>
-<td>112.6</td><td>12.8</td>
-</tr>
-<tr>
-<td><b>League Average</b></td>
-<td>114.4</td><td>11.4</td>
-<td>114.4</td><td>11.4</td>
-</tr>
-</table>
-
+<br><br>
 </div>
 
 <table>
@@ -221,27 +197,28 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
   The team succeeds in multiple ways with many players making notable contributions. Despite the variety in player impact the typical starting five of DiVincenzo, Gobert, Randle, McDaniels and Edwards are the most efficient, impactful players. Each player dominates in their own way with minimal overlap providing significant evidence the starting lineup has been consistently chosen correctly. 
 
- #### Most impactful player: Anthony Edwards 
- - Leads the team in scoring averaging seven more points a game than anyone else.
- - Despite shooting 14 more shots a game than team average he is sixth in field goal percentage and third in 3-pt percentage.
- - Impactful defender averaging the second most steals and the most blocks of any guard. 
 <br><br>
 <div align="center"> 
   <img src="reports/top_scorers.png" width="48%" /> 
   <img src="reports/steals_blocks_fouls.png" width="48%" /> 
 </div> 
+
+ #### Most impactful player: Anthony Edwards 
+ - Leads the team in scoring averaging seven more points a game than anyone else.
+ - Despite shooting 14 more shots a game than team average he is sixth in field goal percentage and third in 3-pt percentage.
+ - Impactful defender averaging the second most steals and the most blocks of any guard. 
+
 <br><br>
+  <div align="center"> 
+    <img src="reports/average_plus_minus.png" width="48%" /> 
+    <img src="reports/assists_steals_turnovers.png" width="48%" /> 
+  </div>
 
 #### Most reliable player: Donte DiVincenzo
 - Impact is largely contributed to ball-security and routine decision making.
 - He averages 4.2 assists per game (Second on team), 2.8 assists for every turnover (Highest on team), records as many steals as turnovers (Highest on team).
 - Point of Improvement: Below-average scoring efficiency relative to role, performing comparably to lower-rotation players despite being a primary scoring option.
-<br><br>
-  <div align="center"> 
-    <img src="reports/plus_minus.png" width="48%" /> 
-    <img src="reports/donte_scatterplot.png" width="48%" /> 
-  </div>
-<br><br>
+
 
 **Rudy Gobert:** Most impactful defender who significantly limits the teams offense.
 - 4 time NBA Defensive Player of the Year and team leading 1.5 blocks per game.
@@ -261,29 +238,28 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
 ## Impactful Substitutes
 
-#### Naz Reid: productive rotational contributor with clear role-based tradeoffs
-
-- Serves as the primary substitute for Gobert and Randle, maintaining moderate defensive activity recording 0.6 fewer blocks per game than Gobert, a gap that understates the broader defensive impact of Gobert. 
-- Provides stronger perimeter shooting efficiency than either starter he replaces, expanding offensive spacing and contributing diversified scoring.
-- Commits roughly half the turnovers of Randle but also generates approximately half the assists, reflecting lower usage and playmaking responsibility.
-- Has performed efficiently in his current role; however, relative defensive impact and overall influence metrics do not currently justify elevation to a starting position.
 <br><br>
   <div align="center"> 
     <img src="reports/naz_blk_ast_tov.png" width="48%" /> 
     <img src="reports/naz_shootingpct.png" width="48%" /> 
   </div>
-<br><br>
 
-  #### Bones Hyland: Neutral reserve presence
+#### Naz Reid: productive rotational contributor with clear role-based tradeoffs
+- Serves as the primary substitute for Gobert and Randle, maintaining moderate defensive activity recording 0.6 fewer blocks per game than Gobert, a gap that understates the broader defensive impact of Gobert. 
+- Provides stronger perimeter shooting efficiency than either starter he replaces, expanding offensive spacing and contributing diversified scoring.
+- Commits roughly half the turnovers of Randle but also generates approximately half the assists, reflecting lower usage and playmaking responsibility.
+- Has performed efficiently in his current role; however, relative defensive impact and overall influence metrics do not currently justify elevation to a starting position.
 
-- Serves as the substitute for Anthony Edwards and Jaden McDaniels without exhibiting strong separation in any single performance category.
-- Metrics cluster near team averages across efficiency, turnover rate, assist generation, and defensive indicators.
-- Does not materially elevate or depress overall performance, functioning primarily as a neutral replacement option.
 <br><br>
    <div align="center">
     <img src="reports/bones_output.png" width="75%" /> 
   </div> 
-<br><br>
+
+  #### Bones Hyland: Neutral reserve presence
+- Serves as the substitute for Anthony Edwards and Jaden McDaniels without exhibiting strong separation in any single performance category.
+- Metrics cluster near team averages across efficiency, turnover rate, assist generation, and defensive indicators.
+- Does not materially elevate or depress overall performance, functioning primarily as a neutral replacement option.
+
 
   #### Terrance Shannon Jr.: Low-usage perimeter specialist with a case for Bones Hylands minutes.
 
@@ -293,7 +269,7 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 - Negative plus minus differential is likely influenced by low lineup quality and garbage time minutes.
 <br><br>
   <div align="center">
-    <img src="reports/terrance_output.png" width="75%" /> 
+    <img src="reports/shanon_charts.png" width="75%" /> 
   </div> 
 <br><br>
 
@@ -307,7 +283,7 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 <br><br>  
   <div align="center">
     <img src="reports/competing_guards.png" width="48%" /> 
-    <img src="reports/conely_donte_shooting.png" width="48%" /> 
+    <img src="reports/fieldgoal_percentages.png" width="48%" /> 
   </div>
 <br><br>
 
@@ -369,12 +345,4 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
   <img src="data/erd.png" width="40%" />
 </p>
 
-# Repository Structure
-Scripts/
-  - create_core_tables.py creates tables used to store the data
-  - weekly_run.py runs the scheduled pipeline
-
-sql folder holds sql files for creating aggregations for visualizations and preparations to use in the analysis
-
-src/db/schema holds sql files for table creation ran with the create_core_tables script
   
