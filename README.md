@@ -28,7 +28,7 @@ Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwol
 </div>
 <br><br>
 <div align="center">
-  <img src="reports/defense_offense_rating.png" width = "98%" height="auto" align="middle" />
+  <img src="Figures/defense_offense_rating.png" width = "98%" height="auto" align="middle" />
 </div>
 
 <div align="center">
@@ -85,8 +85,8 @@ Prepared for the coaching staff, this analysis evaluates the Minnesota Timberwol
 
 <br><br>
   <div align="center"> 
-    <img src="reports/5game_offense_rating.png" width="48%" /> 
-    <img src="reports/5game_defense_rating.png" width="48%" /> 
+    <img src="Figures/5game_offense_rating.png" width="48%" /> 
+    <img src="Figures/5game_defense_rating.png" width="48%" /> 
   </div>
 <br><br>
 
@@ -103,15 +103,15 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 <th width="50%">Rebounding and Turnovers</th>
 </tr>
 <tr>
-<td align="center"><img src="reports/off_efg.png" height="180" /></td>
-<td align="center"><img src="reports/off_orb_pct.png" height="180" /></td>
+<td align="center"><img src="Figures/off_efg.png" height="180" /></td>
+<td align="center"><img src="Figures/off_orb_pct.png" height="180" /></td>
 </tr>
 <tr>
-<td align="center"><img src="reports/off_ft_rate.png" height="180" /></td>
-<td align="center"><img src="reports/off_tov_pct.png" height="180" /></td>
+<td align="center"><img src="Figures/off_ft_rate.png" height="180" /></td>
+<td align="center"><img src="Figures/off_tov_pct.png" height="180" /></td>
 </tr>
 <tr>
-<td colspan="2" align="center"><img src="reports/four_factors_legend.png" width="50%" /></td>
+<td colspan="2" align="center"><img src="Figures/four_factors_legend.png" width="50%" /></td>
 </tr>
 <tr>
 <td width="50%" valign="top">
@@ -152,12 +152,12 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 <th width="33%">Rebounding</th>
 </tr>
 <tr>
-<td><img src="reports/def_shooting.png" width="100%" /></td>
-<td><img src="reports/def_tov_pct.png" width="100%" /></td>
-<td><img src="reports/def_orb_pct.png" width="100%" /></td>
+<td><img src="Figures/def_shooting.png" width="100%" /></td>
+<td><img src="Figures/def_tov_pct.png" width="100%" /></td>
+<td><img src="Figures/def_orb_pct.png" width="100%" /></td>
 </tr>
 <tr>
-<td colspan="3" align="center"><img src="reports/four_factors_legend.png" width="50%" /></td>
+<td colspan="3" align="center"><img src="Figures/four_factors_legend.png" width="50%" /></td>
 </tr>
 <tr>
 <td valign="top">
@@ -199,8 +199,8 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
 <br><br>
 <div align="center"> 
-  <img src="reports/top_scorers.png" width="48%" /> 
-  <img src="reports/steals_blocks_fouls.png" width="48%" /> 
+  <img src="Figures/top_scorers.png" width="48%" /> 
+  <img src="Figures/steals_blocks_fouls.png" width="48%" /> 
 </div> 
 
  #### Most impactful player: Anthony Edwards 
@@ -210,8 +210,8 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
 <br><br>
   <div align="center"> 
-    <img src="reports/average_plus_minus.png" width="48%" /> 
-    <img src="reports/assist_steals_turnovers.png" width="48%" /> 
+    <img src="Figures/average_plus_minus.png" width="48%" /> 
+    <img src="Figures/assist_steals_turnovers.png" width="48%" /> 
   </div>
 
 #### Most reliable player: Donte DiVincenzo
@@ -240,8 +240,8 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
 <br><br>
   <div align="center"> 
-    <img src="reports/naz_blk_ast_tov.png" width="48%" /> 
-    <img src="reports/naz_shootingpct.png" width="48%" /> 
+    <img src="Figures/naz_blk_ast_tov.png" width="48%" /> 
+    <img src="Figures/naz_shootingpct.png" width="48%" /> 
   </div>
 
 #### Naz Reid: productive rotational contributor with clear role-based tradeoffs
@@ -252,7 +252,7 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
 <br><br>
    <div align="center">
-    <img src="reports/bones_output.png" width="75%" /> 
+    <img src="Figures/bones_output.png" width="75%" /> 
   </div> 
 
   #### Bones Hyland: Neutral reserve presence
@@ -269,7 +269,7 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 - Negative plus minus differential is likely influenced by low lineup quality and garbage time minutes.
 <br><br>
   <div align="center">
-    <img src="reports/shanon_charts.png" width="75%" /> 
+    <img src="Figures/shanon_charts.png" width="75%" /> 
   </div> 
 <br><br>
 
@@ -282,8 +282,8 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 - Can be paured with Terrance Shannon Jr. to maintain leads while giving starters rest. 
 <br><br>  
   <div align="center">
-    <img src="reports/competing_guards.png" width="48%" /> 
-    <img src="reports/fieldgoal_percentages.png" width="48%" /> 
+    <img src="Figures/competing_guards.png" width="48%" /> 
+    <img src="Figures/fieldgoal_percentages.png" width="48%" /> 
   </div>
 <br><br>
 
@@ -334,8 +334,8 @@ Introduced in 2004 and now standard across NBA analytics, Dean Oliver's Four Fac
 
 **Team and Player Monitoring Dashboards**
 <div align="center">
-  <img src="reports/Screenshot_of_team_dashboard.png" width="48%" />
-  <img src="reports/Screenshot_of_player_dashboard.png" width="48%" />
+  <img src="Figures/Screenshot_of_team_dashboard.png" width="48%" />
+  <img src="Figures/Screenshot_of_player_dashboard.png" width="48%" />
 </div>
 
 ---
