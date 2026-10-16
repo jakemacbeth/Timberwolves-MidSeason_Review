@@ -1,20 +1,16 @@
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass
-from typing import Any, Dict, Optional, List, Tuple
-
+from dataclasses import asdict, dataclass
+from typing import Any, Dict, Optional, Tuple
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
-
 from nba_api.stats.endpoints import boxscoretraditionalv3, boxscoreadvancedv3
-
-from src.utils.nba_utils import call_with_retries
-
 from src.utils.nba_utils import call_with_retries
 from src.etl.parsing_utils import parse_int, parse_float  
 from src.utils.logger import setup_logger  
 from src.etl.error_handler import log_etl_error
+from src.etl.validators import DataValidator
 
 logger = setup_logger(__name__)  
 
@@ -187,6 +183,12 @@ def extract_team_stats_advanced(d: Dict[str, Any]) -> Dict[int, Dict[str, Any]]:
 
     return out
 
+def first_present(d, *keys):
+    for k in keys:
+        if d.get(k) is not None:
+            return d[k]
+    return None
+
 
 def fetch_teambox_rows(
     game_id: str,
@@ -201,8 +203,9 @@ def fetch_teambox_rows(
     adv_by_team = extract_team_stats_advanced(adv)
 
     def make_row(team_id: int, is_home: bool, opp_id: int) -> TeamBoxRow:
-        tstats = trad_by_team.get(team_id, {})
-        astats = adv_by_team.get(team_id, {})
+        if team_id not in trad_by_team or team_id not in adv_by_team:
+            raise ValueError(f"team {team_id} missing from box score for game_id={game_id}")
+        tstats, astats = trad_by_team[team_id], adv_by_team[team_id]
 
         return TeamBoxRow(
             game_id=game_id,
@@ -212,27 +215,27 @@ def fetch_teambox_rows(
             opponent_team_id=opp_id,
 
             minutes=str(tstats.get("minutes")) if tstats.get("minutes") is not None else None,
-            pts=parse_int(tstats.get("points") or tstats.get("pts")),
-            fgm=parse_int(tstats.get("fieldGoalsMade") or tstats.get("fgm")),
-            fga=parse_int(tstats.get("fieldGoalsAttempted") or tstats.get("fga")),
-            fg3m=parse_int(tstats.get("threePointersMade") or tstats.get("fg3m")),
-            fg3a=parse_int(tstats.get("threePointersAttempted") or tstats.get("fg3a")),
-            ftm=parse_int(tstats.get("freeThrowsMade") or tstats.get("ftm")),
-            fta=parse_int(tstats.get("freeThrowsAttempted") or tstats.get("fta")),
-            oreb=parse_int(tstats.get("reboundsOffensive") or tstats.get("oreb")),
-            dreb=parse_int(tstats.get("reboundsDefensive") or tstats.get("dreb")),
-            reb=parse_int(tstats.get("reboundsTotal") or tstats.get("reb")),
-            ast=parse_int(tstats.get("assists") or tstats.get("ast")),
-            stl=parse_int(tstats.get("steals") or tstats.get("stl")),
-            blk=parse_int(tstats.get("blocks") or tstats.get("blk")),
-            tov=parse_int(tstats.get("turnovers") or tstats.get("tov")),
-            pf=parse_int(tstats.get("foulsPersonal") or tstats.get("pf")),
+            pts=parse_int(first_present(tstats, "points", "pts")),
+            fgm=parse_int(first_present(tstats, "fieldGoalsMade", "fgm")),
+            fga=parse_int(first_present(tstats, "fieldGoalsAttempted", "fga")),
+            fg3m=parse_int(first_present(tstats, "threePointersMade", "fg3m")),
+            fg3a=parse_int(first_present(tstats, "threePointersAttempted", "fg3a")),
+            ftm=parse_int(first_present(tstats, "freeThrowsMade", "ftm")),
+            fta=parse_int(first_present(tstats, "freeThrowsAttempted", "fta")),
+            oreb=parse_int(first_present(tstats, "reboundsOffensive", "oreb")),
+            dreb=parse_int(first_present(tstats, "reboundsDefensive", "dreb")),
+            reb=parse_int(first_present(tstats, "reboundsTotal", "reb")),
+            ast=parse_int(first_present(tstats, "assists", "ast")),
+            stl=parse_int(first_present(tstats, "steals", "stl")),
+            blk=parse_int(first_present(tstats, "blocks", "blk")),
+            tov=parse_int(first_present(tstats, "turnovers", "tov")),
+            pf=parse_int(first_present(tstats, "foulsPersonal", "pf")),
 
-            off_rating=parse_float(astats.get("offensiveRating") or astats.get("offRating")),
-            def_rating=parse_float(astats.get("defensiveRating") or astats.get("defRating")),
+            off_rating=parse_float(first_present(astats, "offensiveRating", "offRating")),
+            def_rating=parse_float(first_present(astats, "defensiveRating", "defRating")),
             net_rating=parse_float(astats.get("netRating")),
             pace=parse_float(astats.get("pace")),
-            ts_pct=parse_float(astats.get("trueShootingPercentage") or astats.get("tsPct")),
+            ts_pct=parse_float(first_present(astats, "trueShootingPercentage", "tsPct")),
         )
 
     home_row = make_row(home_team_id, True, away_team_id)
@@ -276,6 +279,15 @@ def load_teambox_scores(
         try:
             home_row, away_row = fetch_teambox_rows(game_id, season, home_team_id, away_team_id)
 
+            errors = []
+            for row in (home_row, away_row):
+                errors.extend(DataValidator.validate_team_boxscore(asdict(row)))
+            if errors:
+                raise ValueError(
+                    f"Validation failed for game_id={game_id}: "
+                    + "; ".join(str(err) for err in errors)
+                )
+
             with engine.begin() as conn:
                 for row in (home_row, away_row):
                     conn.execute(
@@ -314,14 +326,14 @@ def load_teambox_scores(
             logger.info(f"[{i}/{len(rows)}] Loaded teambox_pergame for game_id={game_id}")
 
         except Exception as e:
-                    failed += 1
-                    logger.error(f"[{i}/{len(rows)}] ERROR loading teambox for game_id={game_id}: {e}")
-                    log_etl_error(
-                        engine=engine,
-                        process_name="load_team_boxscores",
-                        error=e,
-                        game_id=game_id
-                    )
+            failed += 1
+            logger.error(f"[{i}/{len(rows)}] ERROR loading teambox for game_id={game_id}: {e}")
+            log_etl_error(
+                engine=engine,
+                process_name="load_team_boxscores",
+                error=e,
+                game_id=game_id
+            )
 
         time.sleep(sleep_seconds)
 

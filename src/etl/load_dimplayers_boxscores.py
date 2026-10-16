@@ -1,21 +1,15 @@
 from __future__ import annotations
-
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Optional, List, Dict
-
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
-
 from nba_api.stats.endpoints import boxscoretraditionalv3
-
 from src.utils.nba_utils import call_with_retries
-
-from src.utils.nba_utils import call_with_retries
-from src.etl.parsing_utils import parse_int, parse_bool  
+from src.etl.parsing_utils import parse_int
 from src.utils.logger import setup_logger 
 from src.etl.error_handler import log_etl_error
-
+from src.etl.validators import DataValidator
 logger = setup_logger(__name__)  
 
 
@@ -192,13 +186,13 @@ def extract_dimplayer_boxscores(
                 full_name=full_name,
                 first_name=str(first_name) if first_name is not None else None,
                 last_name=str(last_name) if last_name is not None else None,
-                position=str(position) if position is not None else None,
+                position=None,
             )
 
         minutes = r.get("minutes")
         minutes_str = str(minutes) if minutes is not None else None
 
-        starter_flag = None
+        starter_flag = isinstance(position, str) and position.strip() != ""
 
         row = PlayerBoxRow(
             game_id=game_id,
@@ -271,7 +265,17 @@ def load_dimplayer_boxscores(
         away_team_id = int(r["away_team_id"])
 
         try:
-            dim_seeds, box_rows = extract_dimplayer_boxscores(game_id, season, home_team_id, away_team_id)
+            dim_seeds, box_rows = extract_dimplayer_boxscores(game_id, season, home_team_id, 
+                                                              away_team_id)
+
+            errors = []
+            for row in box_rows:
+                for err in DataValidator.validate_player_boxscore(asdict(row)):
+                    errors.append(f"player_id={row.player_id}: {err}")
+            if errors:
+                raise ValueError(
+                    f"Validation failed for game_id={game_id}: " + "; ".join(errors)
+                )
 
             with engine.begin() as conn:
                 for drow in dim_seeds:
