@@ -13,7 +13,7 @@ import sys
 from datetime import datetime
 from config import get_config
 from src.db.engine import get_engine
-from src.etl.spine import load_seasons
+from src.etl.spine import load_spine
 from src.etl.load_factgames_dimteams import load_game_structure
 from src.etl.load_team_boxscores import load_teambox_scores
 from src.etl.load_dimplayers_boxscores import load_dimplayer_boxscores
@@ -72,7 +72,7 @@ def main() -> int:
         logger.info("-" * 80)
         logger.info("Loading game spine")
         logger.info("-" * 80)
-        load_seasons(current_season)
+        load_spine(engine, current_season)
         
 
         logger.info("")

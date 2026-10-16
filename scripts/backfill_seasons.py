@@ -6,7 +6,7 @@ from typing import List
 
 from config import get_config
 from src.db.engine import get_engine
-from src.etl.spine import load_seasons
+from src.etl.spine import load_spine
 from src.etl.load_factgames_dimteams import load_game_structure
 from src.etl.load_team_boxscores import load_teambox_scores
 from src.etl.load_dimplayers_boxscores import load_dimplayer_boxscores
@@ -29,12 +29,12 @@ def backfill_season(
     logger.info("=" * 80)
     
     try:
+        engine = get_engine()
+
         # Step 1: Load spine
         logger.info(f"[1/4] Loading game spine for {season}")
-        load_seasons(season)
-        
-        engine = get_engine()
-        
+        load_spine(engine, season)
+
         # Step 2: Load game structure
         logger.info(f"[2/4] Loading game structure for {season}")
         load_game_structure(
