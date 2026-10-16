@@ -1,17 +1,15 @@
 from __future__ import annotations
-
 import time
 from dataclasses import dataclass
 from typing import Optional, List
-from datetime import datetime, timedelta
-
+from datetime import datetime
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
 from nba_api.stats.endpoints import leaguedashlineups
-
 from src.utils.nba_utils import call_with_retries
 from src.etl.parsing_utils import parse_int, parse_float
 from src.utils.logger import setup_logger
+from src.etl.error_handler import log_etl_error
 
 logger = setup_logger(__name__)
 
@@ -48,8 +46,83 @@ class GameLineupRow:
     blk: Optional[int]
     pf: Optional[int]
 
+SQL_SELECT_GAME_FOR_DATE = """
+SELECT
+    game_id,
+    game_date,
+    home_team_id,
+    away_team_id,
+    CASE WHEN home_team_id = :team_id THEN TRUE ELSE FALSE END AS is_home,
+    CASE WHEN home_team_id = :team_id THEN away_team_id ELSE home_team_id END AS opponent_id
+FROM nba.fact_games
+WHERE game_date = :game_date
+  AND (home_team_id = :team_id OR away_team_id = :team_id)
+LIMIT 1;
+"""
 
-def clean_player_names(group_name_raw: str) -> str:
+SQL_SELECT_MISSING_LINEUP_DATES = """
+SELECT DISTINCT g.game_date
+FROM nba.fact_games g
+LEFT JOIN nba.lineup_game_logs l
+    ON l.game_id = g.game_id
+   AND l.team_id = :team_id
+WHERE (g.home_team_id = :team_id OR g.away_team_id = :team_id)
+  AND g.season = :season
+  AND l.game_id IS NULL
+ORDER BY g.game_date;
+"""
+
+SQL_UPSERT_GAME_LINEUP = """
+INSERT INTO nba.lineup_game_logs (
+    game_id, season, team_id, group_quantity,
+    group_id, group_name,
+    opponent_team_id, is_home, game_date,
+    min, plus_minus,
+    pts, fgm, fga, fg_pct,
+    fg3m, fg3a, fg3_pct,
+    ftm, fta, ft_pct,
+    reb, ast, tov, stl, blk, pf,
+    last_updated_at
+)
+VALUES (
+    :game_id, :season, :team_id, :group_quantity,
+    :group_id, :group_name,
+    :opponent_team_id, :is_home, :game_date,
+    :min, :plus_minus,
+    :pts, :fgm, :fga, :fg_pct,
+    :fg3m, :fg3a, :fg3_pct,
+    :ftm, :fta, :ft_pct,
+    :reb, :ast, :tov, :stl, :blk, :pf,
+    NOW()
+)
+ON CONFLICT (game_id, team_id, group_id) DO UPDATE SET
+    group_name = EXCLUDED.group_name,
+    opponent_team_id = EXCLUDED.opponent_team_id,
+    is_home = EXCLUDED.is_home,
+    game_date = EXCLUDED.game_date,
+    min = EXCLUDED.min,
+    plus_minus = EXCLUDED.plus_minus,
+    pts = EXCLUDED.pts,
+    fgm = EXCLUDED.fgm,
+    fga = EXCLUDED.fga,
+    fg_pct = EXCLUDED.fg_pct,
+    fg3m = EXCLUDED.fg3m,
+    fg3a = EXCLUDED.fg3a,
+    fg3_pct = EXCLUDED.fg3_pct,
+    ftm = EXCLUDED.ftm,
+    fta = EXCLUDED.fta,
+    ft_pct = EXCLUDED.ft_pct,
+    reb = EXCLUDED.reb,
+    ast = EXCLUDED.ast,
+    tov = EXCLUDED.tov,
+    stl = EXCLUDED.stl,
+    blk = EXCLUDED.blk,
+    pf = EXCLUDED.pf,
+    last_updated_at = NOW();
+"""
+
+
+def clean_player_names(group_name_raw: str) -> Optional[str]:
     if not group_name_raw or not isinstance(group_name_raw, str):
         return None
     
@@ -114,9 +187,10 @@ def extract_lineups_for_date(
     lineup_rows = []
     
     for idx, row in df.iterrows():
-        group_id = str(row.get('GROUP_ID', ''))
-        if not group_id or group_id == 'nan':
-            group_id = f"date_{game_date.replace('/', '')}_lineup_{idx}"
+        group_id = str(row.get('GROUP_ID', '')).strip()
+        if group_id in ('', 'nan', 'None'):
+            logger.warning(f"Skipping lineup with no GROUP_ID for team {team_id} on {game_date}")
+            continue
         
         group_name_raw = row.get('GROUP_NAME')
         group_name = clean_player_names(group_name_raw)
@@ -170,26 +244,12 @@ def get_game_info_for_date(engine: Engine, game_date: str, team_id: int) -> Opti
     try:
         date_obj = datetime.strptime(game_date, '%m/%d/%Y')
         sql_date = date_obj.strftime('%Y-%m-%d')
-    except:
+    except ValueError:
         logger.error(f"Invalid date format: {game_date}")
         return None
     
-    query = text("""
-        SELECT 
-            game_id,
-            game_date,
-            home_team_id,
-            away_team_id,
-            CASE WHEN home_team_id = :team_id THEN TRUE ELSE FALSE END as is_home,
-            CASE WHEN home_team_id = :team_id THEN away_team_id ELSE home_team_id END as opponent_id
-        FROM nba.fact_games
-        WHERE game_date = :game_date
-          AND (home_team_id = :team_id OR away_team_id = :team_id)
-        LIMIT 1
-    """)
-    
     with engine.connect() as conn:
-        result = conn.execute(query, {
+        result = conn.execute(text(SQL_SELECT_GAME_FOR_DATE), {
             "game_date": sql_date,
             "team_id": team_id
         }).fetchone()
@@ -202,57 +262,6 @@ def get_game_info_for_date(engine: Engine, game_date: str, team_id: int) -> Opti
         }
     else:
         return None
-
-
-SQL_UPSERT_GAME_LINEUP = """
-INSERT INTO nba.lineup_game_logs (
-    game_id, season, team_id, group_quantity,
-    group_id, group_name,
-    opponent_team_id, is_home, game_date,
-    min, plus_minus,
-    pts, fgm, fga, fg_pct,
-    fg3m, fg3a, fg3_pct,
-    ftm, fta, ft_pct,
-    reb, ast, tov, stl, blk, pf,
-    last_updated_at
-)
-VALUES (
-    :game_id, :season, :team_id, :group_quantity,
-    :group_id, :group_name,
-    :opponent_team_id, :is_home, :game_date,
-    :min, :plus_minus,
-    :pts, :fgm, :fga, :fg_pct,
-    :fg3m, :fg3a, :fg3_pct,
-    :ftm, :fta, :ft_pct,
-    :reb, :ast, :tov, :stl, :blk, :pf,
-    NOW()
-)
-ON CONFLICT (game_id, team_id, group_id) DO UPDATE SET
-    group_name = EXCLUDED.group_name,
-    opponent_team_id = EXCLUDED.opponent_team_id,
-    is_home = EXCLUDED.is_home,
-    game_date = EXCLUDED.game_date,
-    min = EXCLUDED.min,
-    plus_minus = EXCLUDED.plus_minus,
-    pts = EXCLUDED.pts,
-    fgm = EXCLUDED.fgm,
-    fga = EXCLUDED.fga,
-    fg_pct = EXCLUDED.fg_pct,
-    fg3m = EXCLUDED.fg3m,
-    fg3a = EXCLUDED.fg3a,
-    fg3_pct = EXCLUDED.fg3_pct,
-    ftm = EXCLUDED.ftm,
-    fta = EXCLUDED.fta,
-    ft_pct = EXCLUDED.ft_pct,
-    reb = EXCLUDED.reb,
-    ast = EXCLUDED.ast,
-    tov = EXCLUDED.tov,
-    stl = EXCLUDED.stl,
-    blk = EXCLUDED.blk,
-    pf = EXCLUDED.pf,
-    last_updated_at = NOW();
-"""
-
 
 def load_season_game_lineups_for_team(
     engine: Engine,
@@ -267,16 +276,8 @@ def load_season_game_lineups_for_team(
     logger.info(f"Using date-based approach (DateFrom/DateTo)")
     
 
-    query = text("""
-        SELECT DISTINCT game_date
-        FROM nba.fact_games
-        WHERE (home_team_id = :team_id OR away_team_id = :team_id)
-          AND season = :season
-        ORDER BY game_date
-    """)
-    
     with engine.connect() as conn:
-        game_dates = conn.execute(query, {
+        game_dates = conn.execute(text(SQL_SELECT_MISSING_LINEUP_DATES), {
             "team_id": team_id,
             "season": season
         }).fetchall()
@@ -301,30 +302,30 @@ def load_season_game_lineups_for_team(
     
     for i, (api_date, sql_date) in enumerate(date_list, 1):
         logger.info(f"[{i}/{len(date_list)}] Processing date {api_date}...")
-        
+        game_id = None
+
         try:
+            game_info = get_game_info_for_date(engine, api_date, team_id)
+
+            if not game_info:
+                logger.warning(f"  → No game found in fact_games for {api_date}")
+                no_data_count += 1
+                continue
+
+            game_id = game_info['game_id']
 
             lineup_rows = extract_lineups_for_date(
                 api_date, season, team_id, group_quantity
             )
-            
+
             if not lineup_rows:
-                logger.debug(f"  → No lineup data (future game or rest day)")
+                logger.warning(f"  → No lineup data for {api_date} (game_id={game_id}), but the team played that day")
                 no_data_count += 1
                 time.sleep(sleep_seconds)
                 continue
-            
-            game_info = get_game_info_for_date(engine, api_date, team_id)
-            
-            if not game_info:
-                logger.warning(f"  → No game found in fact_games for {api_date}")
-                no_data_count += 1
-                time.sleep(sleep_seconds)
-                continue
-            
 
             for lineup in lineup_rows:
-                lineup.game_id = game_info['game_id']
+                lineup.game_id = game_id
                 lineup.opponent_team_id = game_info['opponent_team_id']
                 lineup.is_home = game_info['is_home']
             
@@ -372,8 +373,14 @@ def load_season_game_lineups_for_team(
             logger.info(f"  → Loaded {loaded} lineups for game {game_info['game_id']}")
             
         except Exception as e:
-            logger.error(f"  → Failed: {e}")
+            logger.error(f"  → Failed for {api_date}: {e}")
             fail_count += 1
+            log_etl_error(
+                engine=engine,
+                process_name="load_gamebygame_lineups",
+                error=e,
+                game_id=game_id,
+            )
         
         time.sleep(sleep_seconds)
     
