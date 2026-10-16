@@ -39,7 +39,7 @@ def log_etl_error(
                 "game_id": game_id,
                 "error_type": type(error).__name__,
                 "error_message": str(error),
-                "stack_trace": traceback.format_exc(),
+                "stack_trace": "".join(traceback.format_exception(error)),
                 "retry_count": retry_count,
             })
         logger.debug(f"Logged error to database: {process_name} - {game_id}")
@@ -84,12 +84,13 @@ def get_failed_game_ids(
 ) -> list[str]:
 
     query = text("""
-        SELECT DISTINCT game_id
+        SELECT game_id
         FROM nba.etl_errors
         WHERE process_name = :process_name
           AND is_resolved = FALSE
           AND game_id IS NOT NULL
-        ORDER BY created_at DESC
+        GROUP BY game_id
+        ORDER BY MAX(created_at) DESC
         LIMIT :limit
     """)
     
@@ -105,28 +106,42 @@ def get_failed_game_ids(
 
 def get_error_summary(engine: Engine, days: int = 7) -> dict:
 
-    summary_sql = text("""
-        SELECT 
-            COUNT(*) as total_errors,
-            COUNT(*) FILTER (WHERE is_resolved = FALSE) as unresolved,
-            json_object_agg(
-                DISTINCT process_name, 
-                COUNT(*) FILTER (WHERE process_name = nba.etl_errors.process_name)
-            ) as by_process,
-            json_object_agg(
-                DISTINCT error_type,
-                COUNT(*) FILTER (WHERE error_type = nba.etl_errors.error_type)
-            ) as by_type
+    window = "created_at >= NOW() - make_interval(days => :days)"
+
+    totals_sql = text(f"""
+        SELECT
+            COUNT(*) AS total_errors,
+            COUNT(*) FILTER (WHERE is_resolved = FALSE) AS unresolved
         FROM nba.etl_errors
-        WHERE created_at >= NOW() - INTERVAL ':days days'
+        WHERE {window}
     """)
-    
+
+    by_process_sql = text(f"""
+        SELECT process_name, COUNT(*) AS error_count
+        FROM nba.etl_errors
+        WHERE {window}
+        GROUP BY process_name
+        ORDER BY error_count DESC
+    """)
+
+    by_type_sql = text(f"""
+        SELECT error_type, COUNT(*) AS error_count
+        FROM nba.etl_errors
+        WHERE {window}
+        GROUP BY error_type
+        ORDER BY error_count DESC
+    """)
+
+    params = {"days": days}
+
     with engine.connect() as conn:
-        result = conn.execute(summary_sql, {"days": days}).fetchone()
-    
+        totals = conn.execute(totals_sql, params).fetchone()
+        by_process = {row[0]: row[1] for row in conn.execute(by_process_sql, params)}
+        by_type = {row[0]: row[1] for row in conn.execute(by_type_sql, params)}
+
     return {
-        "total_errors": result[0] or 0,
-        "unresolved": result[1] or 0,
-        "by_process": result[2] or {},
-        "by_type": result[3] or {},
+        "total_errors": totals[0],
+        "unresolved": totals[1],
+        "by_process": by_process,
+        "by_type": by_type,
     }

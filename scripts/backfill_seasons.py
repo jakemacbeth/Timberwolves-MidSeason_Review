@@ -3,7 +3,6 @@ import argparse
 import sys
 from datetime import datetime
 from typing import List
-
 from config import get_config
 from src.db.engine import get_engine
 from src.etl.spine import load_spine

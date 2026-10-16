@@ -260,7 +260,7 @@ class DataValidator:
             ))
         
         # Negative stats validation
-        for stat in ["pts", "reb", "ast", "stl", "blk", "pf"]:
+        for stat in ["pts", "reb", "ast", "stl", "tov", "blk", "pf"]:
             value = box_data.get(stat)
             if value is not None and value < 0:
                 errors.append(ValidationError(
