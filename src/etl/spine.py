@@ -1,43 +1,18 @@
 from __future__ import annotations
-
 from typing import Iterable
+from nba_api.stats.endpoints import LeagueGameFinder
 from sqlalchemy import text
-from nba_api.stats.endpoints import LeagueGameFinder
-
-from src.db.engine import get_engine
-
-from src.db.engine import get_engine
+from sqlalchemy.engine import Engine
 from src.utils.logger import setup_logger 
-
-from nba_api.stats.endpoints import LeagueGameFinder
-from nba_api.library.http import NBAHTTP
+from src.utils.nba_utils import call_with_retries
 
 logger = setup_logger(__name__)  
 
-# Mimic a real browser so stats.nba.com doesn't block 
-
-_nba_headers = {
-    'User-Agent': (
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-        'AppleWebKit/537.36 (KHTML, like Gecko) '
-        'Chrome/120.0.0.0 Safari/537.36'
-    ),
-    'Referer': 'https://www.nba.com/',
-    'Origin': 'https://www.nba.com',
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'x-nba-stats-origin': 'stats',
-    'x-nba-stats-token': 'true',
-}
-NBAHTTP.headers = _nba_headers
 
 def extract_gameids(season: str) -> list[str]:
 
-    lgf = LeagueGameFinder(
-        season_nullable=season,
-        league_id_nullable="00",
-        season_type_nullable="Regular Season"
-    )
+    lgf = call_with_retries(lambda: LeagueGameFinder(season_nullable=season, league_id_nullable="00", 
+                                                     season_type_nullable="Regular Season"))
     df = lgf.get_data_frames()[0]
     df = df[df["WL"].notna()]
 
@@ -54,14 +29,12 @@ def extract_gameids(season: str) -> list[str]:
     return game_ids
 
 
-def upsert_game_ids(game_ids: Iterable[str], season: str) -> tuple[int, int]:
+def upsert_game_ids(engine: Engine, game_ids: Iterable[str], season: str) -> tuple[int, int]:
 
     ids = [str(gid) for gid in game_ids]
     attempted = len(ids)
     if attempted == 0:
         return 0, 0
-
-    engine = get_engine()
 
     insert_sql = text("""
         WITH incoming AS (
@@ -82,12 +55,12 @@ def upsert_game_ids(game_ids: Iterable[str], season: str) -> tuple[int, int]:
 
 
 
-def load_seasons(season: str) -> None:
-        logger.info(f"\n=== Season {season} ===")
-        game_ids = extract_gameids(season)
-        logger.info(f"Fetched unique game_ids: {len(game_ids)}")
+def load_spine(engine: Engine, season: str) -> None:
+    logger.info(f"\n=== Season {season} ===")
+    game_ids = extract_gameids(season)
+    logger.info(f"Fetched unique game_ids: {len(game_ids)}")
 
-        attempted, inserted = upsert_game_ids(game_ids, season=season)
-        logger.info(f"Attempted inserts: {attempted}")
-        logger.info(f"New games inserted: {inserted}")
+    attempted, inserted = upsert_game_ids(engine, game_ids, season=season)
+    logger.info(f"Attempted inserts: {attempted}")
+    logger.info(f"New games inserted: {inserted}")
 
