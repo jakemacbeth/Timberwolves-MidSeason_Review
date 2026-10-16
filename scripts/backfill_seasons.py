@@ -1,8 +1,10 @@
 
 import argparse
+import logging
 import sys
 from datetime import datetime
 from typing import List
+
 from config import get_config
 from src.db.engine import get_engine
 from src.etl.spine import load_spine
@@ -10,10 +12,9 @@ from src.etl.load_factgames_dimteams import load_game_structure
 from src.etl.load_team_boxscores import load_teambox_scores
 from src.etl.load_dimplayers_boxscores import load_dimplayer_boxscores
 from src.etl.load_gamebygame_lineups import load_season_game_lineups_for_team
-from src.utils.logger import setup_logger, get_default_log_file
+from src.utils.logger import configure_logging, get_default_log_file
 
-log_file = get_default_log_file("backfill")
-logger = setup_logger(__name__, log_file=log_file)
+logger = logging.getLogger(__name__)
 
 
 def backfill_season(
@@ -28,6 +29,7 @@ def backfill_season(
     logger.info("=" * 80)
     
     try:
+        config = get_config()
         engine = get_engine()
 
         # Step 1: Load spine
@@ -71,11 +73,11 @@ def backfill_season(
         logger.info(f"[5/5] Loading lineup data for {season}")
         load_season_game_lineups_for_team(
             engine=engine,
-            season="2025-26",
-            team_id=1610612750,  # Timberwolves
+            season=season,
+            team_id=config.etl.team_id,
             group_quantity=5,
-            limit=None,  
-            sleep_seconds=1.0
+            limit=limit,
+            sleep_seconds=sleep_seconds,
         )
         
         duration = (datetime.now() - start_time).total_seconds()
@@ -233,5 +235,9 @@ Examples:
 
 
 if __name__ == "__main__":
+    configure_logging(
+        log_file=get_default_log_file("backfill"),
+        level=get_config().log_level,
+    )
     exit_code = main()
     sys.exit(exit_code)

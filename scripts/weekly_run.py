@@ -9,6 +9,8 @@ Orchestrates the full ETL pipeline:
 5. Load lineup data
 
 """
+
+import logging
 import sys
 from datetime import datetime
 from config import get_config
@@ -17,12 +19,11 @@ from src.etl.spine import load_spine
 from src.etl.load_factgames_dimteams import load_game_structure
 from src.etl.load_team_boxscores import load_teambox_scores
 from src.etl.load_dimplayers_boxscores import load_dimplayer_boxscores
-from src.utils.logger import setup_logger, get_default_log_file
+from src.utils.logger import configure_logging, get_default_log_file
 from src.etl.load_gamebygame_lineups import load_season_game_lineups_for_team
 
 
-log_file = get_default_log_file("weekly_run")
-logger = setup_logger(__name__, log_file=log_file)
+logger = logging.getLogger(__name__)
 
 
 def get_current_season() -> str:
@@ -53,7 +54,7 @@ def main() -> int:
 
     start_time = datetime.now()
     logger.info("=" * 80)
-    logger.info("Starting Wolves Analytics Daily ETL Pipeline")
+    logger.info("Starting Wolves Analytics Weekly ETL Pipeline")
     logger.info("=" * 80)
     
     try:
@@ -120,18 +121,18 @@ def main() -> int:
           
         load_season_game_lineups_for_team(
             engine=engine,
-            season="2025-26",
-            team_id=1610612750,  # Timberwolves
+            season=current_season,
+            team_id=config.etl.team_id,
             group_quantity=5,
-            limit=None,  
-            sleep_seconds=1.0
+            limit=None,
+            sleep_seconds=config.etl.default_sleep_seconds,
         )
 
         # Success summary
         duration = (datetime.now() - start_time).total_seconds()
         logger.info("")
         logger.info("=" * 80)
-        logger.info("Daily ETL Pipeline Completed Successfully")
+        logger.info("Weekly ETL Pipeline Completed Successfully")
         logger.info(f"Total duration: {duration:.2f} seconds ({duration/60:.2f} minutes)")
         logger.info("=" * 80)
         
@@ -145,7 +146,7 @@ def main() -> int:
         duration = (datetime.now() - start_time).total_seconds()
         logger.error("")
         logger.error("=" * 80)
-        logger.error("Daily ETL Pipeline FAILED")
+        logger.error("Weekly ETL Pipeline FAILED")
         logger.error(f"Duration before failure: {duration:.2f} seconds")
         logger.error(f"Error: {e}")
         logger.error("=" * 80)
@@ -154,5 +155,9 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    configure_logging(
+        log_file=get_default_log_file("weekly_run"),
+        level=get_config().log_level,
+    )
     exit_code = main()
     sys.exit(exit_code)

@@ -63,6 +63,7 @@ class ETLConfig:
     retry_backoff_seconds: list[int] = field(default_factory=lambda: [120, 200, 250])
     max_total_wait_seconds: int = 600
     batch_size: int = 100
+    team_id: int = 1610612750  # Timberwolves
     
     @classmethod
     def from_env(cls) -> "ETLConfig":
@@ -71,6 +72,7 @@ class ETLConfig:
             default_sleep_seconds=float(os.getenv("ETL_SLEEP_SECONDS", "0.6")),
             max_retries=int(os.getenv("ETL_MAX_RETRIES", "3")),
             batch_size=int(os.getenv("ETL_BATCH_SIZE", "100")),
+            team_id=int(os.getenv("NBA_TEAM_ID", "1610612750")),
         )
 
 
