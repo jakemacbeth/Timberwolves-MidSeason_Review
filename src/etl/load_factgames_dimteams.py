@@ -19,7 +19,7 @@ from src.utils.logger import setup_logger
 logger = setup_logger(__name__)  
 
 
-
+# Future row of fact_games
 @dataclass
 class GameInsert:
     game_id: str
@@ -33,7 +33,7 @@ class GameInsert:
     arena_city: Optional[str]
     arena_state: Optional[str]
 
-
+#Future row of dim_teams
 @dataclass
 class TeamDimRow:
     team_id: int
@@ -96,9 +96,20 @@ ON CONFLICT (team_id) DO UPDATE SET
   last_updated_at = NOW();
 """
 
+# API extraction
 
+def team_dim_from_obj(team_obj: Dict[str, Any], fallback_id: int) -> TeamDimRow:
+    tid = parse_int(team_obj.get("teamId") or team_obj.get("id")) or fallback_id
+    city = team_obj.get("teamCity") or team_obj.get("city")
+    name = team_obj.get("teamName") or team_obj.get("name") or team_obj.get("nickname")
+    return TeamDimRow(
+        team_id=tid,
+        abbreviation=team_obj.get("teamTricode") or team_obj.get("abbreviation"),
+        team_name=name,
+        city=city,
+        full_name=f"{city} {name}" if city and name else None,
+    )
 
-# NBA API extraction 
 
 def extract_game_structure(
     game_id: str,
@@ -143,26 +154,12 @@ def extract_game_structure(
     status_text = bss.get("gameStatusText")
 
     # --- team identity objects ---
-    def dim_from_team_obj(team_obj: Dict[str, Any], fallback_id: int) -> TeamDimRow:
-        tid = parse_int(team_obj.get("teamId") or team_obj.get("id")) or fallback_id
-        abbrev = team_obj.get("teamTricode") or team_obj.get("abbreviation")
-        city = team_obj.get("teamCity") or team_obj.get("city")
-        name = team_obj.get("teamName") or team_obj.get("name") or team_obj.get("nickname")
-        full_name = team_obj.get("teamName") or (f"{city} {name}" if city and name else None)
-        return TeamDimRow(
-            team_id=tid,
-            abbreviation=abbrev,
-            team_name=name,
-            city=city,
-            full_name=full_name,
-        )
-
     away_team_obj = bss.get("awayTeam") if isinstance(bss.get("awayTeam"), dict) else {}
     home_team_obj = bss.get("homeTeam") if isinstance(bss.get("homeTeam"), dict) else {}
 
     team_dim_rows: List[TeamDimRow] = [
-        dim_from_team_obj(home_team_obj, home_team_id),
-        dim_from_team_obj(away_team_obj, away_team_id),
+        team_dim_from_obj(home_team_obj, home_team_id),
+        team_dim_from_obj(away_team_obj, away_team_id),
     ]
 
     game_insert = GameInsert(
