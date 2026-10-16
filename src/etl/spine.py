@@ -1,20 +1,24 @@
 from __future__ import annotations
-from typing import Iterable
+from typing import Iterable, Optional
 from nba_api.stats.endpoints import LeagueGameFinder
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
-from src.utils.logger import setup_logger 
+import logging
 from src.utils.nba_utils import call_with_retries
 
-logger = setup_logger(__name__)  
+logger = logging.getLogger(__name__)
 
 
-def extract_gameids(season: str) -> list[str]:
+def extract_gameids(season: str, date_to: Optional[str] = None) -> list[str]:
 
     lgf = call_with_retries(lambda: LeagueGameFinder(season_nullable=season, league_id_nullable="00", 
                                                      season_type_nullable="Regular Season"))
     df = lgf.get_data_frames()[0]
     df = df[df["WL"].notna()]
+
+    if date_to:
+        # GAME_DATE is the local game date as "YYYY-MM-DD", so text comparison works
+        df = df[df["GAME_DATE"] <= date_to]
 
     if "GAME_ID" not in df.columns:
         raise ValueError(f"Expected GAME_ID column. Got columns: {list(df.columns)}")
@@ -55,12 +59,13 @@ def upsert_game_ids(engine: Engine, game_ids: Iterable[str], season: str) -> tup
 
 
 
-def load_spine(engine: Engine, season: str) -> None:
+def load_spine(engine: Engine, season: str, date_to: Optional[str] = None) -> None:
     logger.info(f"\n=== Season {season} ===")
-    game_ids = extract_gameids(season)
+    if date_to:
+        logger.info(f"Only loading games played on or before {date_to}")
+    game_ids = extract_gameids(season, date_to=date_to)
     logger.info(f"Fetched unique game_ids: {len(game_ids)}")
 
     attempted, inserted = upsert_game_ids(engine, game_ids, season=season)
     logger.info(f"Attempted inserts: {attempted}")
     logger.info(f"New games inserted: {inserted}")
-

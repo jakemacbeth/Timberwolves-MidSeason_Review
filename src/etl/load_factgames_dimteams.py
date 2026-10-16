@@ -9,9 +9,9 @@ from src.utils.nba_utils import call_with_retries
 from src.etl.parsing_utils import parse_int
 from src.etl.error_handler import log_etl_error
 from src.etl.validators import DataValidator
-from src.utils.logger import setup_logger 
+import logging
 
-logger = setup_logger(__name__)  
+logger = logging.getLogger(__name__) 
 
 
 # Future row of fact_games
@@ -183,12 +183,6 @@ def load_game_structure(
     sleep_seconds: float = 1.2,
     limit: Optional[int] = None
 ) -> None:
-    errors = DataValidator.validate_game_insert(asdict(game_insert))
-    if errors:
-        raise ValueError(
-            f"Validation failed for game_id={game_id}: "
-                + "; ".join(str(err) for err in errors)
-    )
 
     with engine.begin() as conn:
         rows = conn.execute(
@@ -216,6 +210,13 @@ def load_game_structure(
             game_insert, team_dim_rows = extract_game_structure(
                 game_id=game_id,
                 season=season,
+            )
+
+            errors = DataValidator.validate_game_insert(asdict(game_insert))
+            if errors:
+                raise ValueError(
+                f"Validation failed for game_id={game_id}: "
+                + "; ".join(str(err) for err in errors)
             )
 
             with engine.begin() as conn:

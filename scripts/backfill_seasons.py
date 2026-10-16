@@ -34,7 +34,7 @@ def backfill_season(
 
         # Step 1: Load spine
         logger.info(f"[1/4] Loading game spine for {season}")
-        load_spine(engine, season)
+        load_spine(engine, season, date_to=config.date_to)
 
         # Step 2: Load game structure
         logger.info(f"[2/4] Loading game structure for {season}")

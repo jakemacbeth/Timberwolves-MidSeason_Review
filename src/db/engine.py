@@ -2,11 +2,10 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.pool import Pool
 from typing import Optional
-
 from config import get_config
-from src.utils.logger import setup_logger
+import logging
 
-logger = setup_logger(__name__)
+logger = logging.getLogger(__name__)
 
 # Global engine instance (singleton)
 _engine: Optional[Engine] = None

@@ -73,7 +73,7 @@ def main() -> int:
         logger.info("-" * 80)
         logger.info("Loading game spine")
         logger.info("-" * 80)
-        load_spine(engine, current_season)
+        load_spine(engine, current_season, date_to=config.date_to)
         
 
         logger.info("")

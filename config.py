@@ -83,7 +83,8 @@ class AppConfig:
     db: DatabaseConfig
     etl: ETLConfig
     log_level: str = "INFO"
-    current_season: Optional[str] = None
+    current_season=os.getenv("NBA_SEASON"),
+    date_to=os.getenv("NBA_DATE_TO") or None,
     
     @classmethod
     def load(cls) -> "AppConfig":

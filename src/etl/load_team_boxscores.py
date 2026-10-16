@@ -8,11 +8,11 @@ from sqlalchemy.engine import Engine
 from nba_api.stats.endpoints import boxscoretraditionalv3, boxscoreadvancedv3
 from src.utils.nba_utils import call_with_retries
 from src.etl.parsing_utils import parse_int, parse_float  
-from src.utils.logger import setup_logger  
+import logging 
 from src.etl.error_handler import log_etl_error
 from src.etl.validators import DataValidator
 
-logger = setup_logger(__name__)  
+logger = logging.getLogger(__name__)
 
 
 @dataclass

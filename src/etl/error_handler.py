@@ -7,10 +7,9 @@ import traceback
 from typing import Optional
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
+import logging
 
-from src.utils.logger import setup_logger
-
-logger = setup_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def log_etl_error(
