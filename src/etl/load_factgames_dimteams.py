@@ -1,20 +1,15 @@
 from __future__ import annotations
-
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any, Dict, List, Optional, Tuple
-
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
-
 from nba_api.stats.endpoints import boxscoresummaryv3
-
 from src.utils.nba_utils import call_with_retries
-
-from src.utils.nba_utils import call_with_retries
-from src.etl.parsing_utils import parse_int, parse_bool  
-from src.utils.logger import setup_logger  
-
+from src.etl.parsing_utils import parse_int
+from src.etl.error_handler import log_etl_error
+from src.etl.validators import DataValidator
+from src.utils.logger import setup_logger 
 
 logger = setup_logger(__name__)  
 
@@ -137,7 +132,7 @@ def extract_game_structure(
     game_time_utc = bss.get("gameTimeUTC")
     game_et = bss.get("gameEt")
 
-    raw_date = game_time_utc or game_et
+    raw_date = game_et or game_time_utc
     if raw_date is None:
         raise ValueError(
             f"Missing gameTimeUTC/gameEt in boxScoreSummary for game_id={game_id}"
@@ -188,6 +183,12 @@ def load_game_structure(
     sleep_seconds: float = 1.2,
     limit: Optional[int] = None
 ) -> None:
+    errors = DataValidator.validate_game_insert(asdict(game_insert))
+    if errors:
+        raise ValueError(
+            f"Validation failed for game_id={game_id}: "
+                + "; ".join(str(err) for err in errors)
+    )
 
     with engine.begin() as conn:
         rows = conn.execute(
@@ -253,6 +254,12 @@ def load_game_structure(
         except Exception as e:
             failed += 1
             logger.error(f"ERROR loading game_id={game_id}: {e}")
+            log_etl_error(
+                engine=engine,
+                process_name="load_game_structure",
+                error=e,
+                game_id=game_id,
+            )
 
         time.sleep(sleep_seconds)
 
