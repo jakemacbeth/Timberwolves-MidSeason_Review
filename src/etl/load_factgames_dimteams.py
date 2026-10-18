@@ -10,6 +10,7 @@ from src.etl.parsing_utils import parse_int
 from src.etl.error_handler import log_etl_error
 from src.etl.validators import DataValidator
 import logging
+from nba_api.stats.library.http import NBAStatsHTTP
 
 logger = logging.getLogger(__name__) 
 
@@ -111,8 +112,11 @@ def extract_game_structure(
     season: str
 ) -> Tuple[GameInsert, List[TeamDimRow]]:
 
-    resp = call_with_retries(lambda: boxscoresummaryv3.BoxScoreSummaryV3(game_id=game_id))
-    d = resp.get_dict()
+    d = call_with_retries(lambda: NBAStatsHTTP().send_api_request(
+            endpoint="boxscoresummaryv3",
+            parameters={"GameID": game_id},
+            timeout=30,
+        ).get_dict())
 
     bss = d.get("boxScoreSummary")
     if not isinstance(bss, dict) or not bss:
