@@ -1,0 +1,30 @@
+name: Extract NBA data to Databricks volume
+
+on:
+  schedule:
+    - cron: '15 11 * * *'
+  workflow_dispatch:
+    inputs:
+      season:
+        description: 'Season, e.g. 2025-26'
+        required: false
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - run: pip install -r requirements-extract.txt
+
+      - run: python -m src.extract.run
+        env:
+          DATABRICKS_HOST:  ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          NBA_SEASON:       ${{ inputs.season || '2025-26' }}
